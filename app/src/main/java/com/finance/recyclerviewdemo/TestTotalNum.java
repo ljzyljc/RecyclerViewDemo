@@ -2,6 +2,7 @@ package com.finance.recyclerviewdemo;
 
 /**
  * Created by Jackie on 2018/7/9.
+ * 在一个有序数组中，找一个和为23的两个数，要求时间复杂度为O(N)
  */
 public class TestTotalNum {
 
