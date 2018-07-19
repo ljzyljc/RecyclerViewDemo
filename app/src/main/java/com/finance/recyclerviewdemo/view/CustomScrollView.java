@@ -131,18 +131,29 @@ public class CustomScrollView extends ViewGroup {
 
 
             case MotionEvent.ACTION_UP:
+//                mVelocityTracker.addMovement(vtev);
+//                eventAddedToVelocityTracker = true;
+//                mVelocityTracker.computeCurrentVelocity(1000,mMaxFlingVelocity);
+//                float yVelocity = -VelocityTrackerCompat.getYVelocity(mVelocityTracker,mScrollPointerId);
+//                if (Math.abs(yVelocity) < mMinFlingVelocity) {
+//                    yVelocity = 0F;
+//                } else {
+//                    yVelocity = Math.max(-mMaxFlingVelocity, Math.min(yVelocity, mMaxFlingVelocity));
+//                }
+//                if (yVelocity != 0) {
+//                    mViewFlinger.fling((int) yVelocity);
+//                } else {
+//                    setScrollState(SCROLL_STATE_IDLE);
+//                }
+//                resetTouch();
                 mVelocityTracker.addMovement(vtev);
                 eventAddedToVelocityTracker = true;
-                mVelocityTracker.computeCurrentVelocity(1000,mMaxFlingVelocity);
-                float yVelocity = -VelocityTrackerCompat.getYVelocity(mVelocityTracker,mScrollPointerId);
-                if (Math.abs(yVelocity) < mMinFlingVelocity) {
-                    yVelocity = 0F;
-                } else {
-                    yVelocity = Math.max(-mMaxFlingVelocity, Math.min(yVelocity, mMaxFlingVelocity));
-                }
-                if (yVelocity != 0) {
-                    mViewFlinger.fling((int) yVelocity);
-                } else {
+                mVelocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
+                final float xvel =
+                        -VelocityTrackerCompat.getXVelocity(mVelocityTracker, mScrollPointerId);
+                final float yvel =
+                        -VelocityTrackerCompat.getYVelocity(mVelocityTracker, mScrollPointerId);
+                if (!((xvel != 0 || yvel != 0) && fling((int) xvel, (int) yvel))) {
                     setScrollState(SCROLL_STATE_IDLE);
                 }
                 resetTouch();
@@ -153,6 +164,24 @@ public class CustomScrollView extends ViewGroup {
             mVelocityTracker.addMovement(vtev);
         }
         vtev.recycle();
+        return true;
+    }
+
+    private boolean fling(int velocityX, int velocityY) {
+        if (Math.abs(velocityX) < mMinFlingVelocity) {
+            velocityX = 0;
+        }
+        if (Math.abs(velocityY) < mMinFlingVelocity) {
+            velocityY = 0;
+        }
+        if (velocityX == 0 && velocityY == 0) {
+            // If we don't have any velocity, return false
+            return false;
+        }
+
+        velocityX = Math.max(-mMaxFlingVelocity, Math.min(velocityX, mMaxFlingVelocity));
+        velocityY = Math.max(-mMaxFlingVelocity, Math.min(velocityY, mMaxFlingVelocity));
+        mViewFlinger.fling(velocityX, velocityY);
         return true;
     }
 
@@ -223,7 +252,7 @@ public class CustomScrollView extends ViewGroup {
         }
         @Override
         public void run() {
-            disableRunOnAnimationRequests();
+//            disableRunOnAnimationRequests();    //加这个是模仿recycleView里面的写法，但是去掉了感觉也没什么影响
             final OverScroller scroller = mScroller;
             if (scroller.computeScrollOffset()){
                 int y = scroller.getCurrY();
@@ -232,10 +261,10 @@ public class CustomScrollView extends ViewGroup {
                 contrainScrollBy(0,dy);
                 postOnAnimation();
             }
-            enableRunOnAnimationRequests();
+//            enableRunOnAnimationRequests();
 
         }
-        public void fling(int velocityY){
+        public void fling(int velocityX,int velocityY){
             mLastFlingY = 0;
             setScrollState(SCROLL_STATE_SETTLING);
             mScroller.fling(0,0,0,velocityY,Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -259,15 +288,16 @@ public class CustomScrollView extends ViewGroup {
             }
         }
         void postOnAnimation() {
-            if (mEatRunOnAnimationRequest) {
-                mReSchedulePostAnimationCallback = true;
-            } else {
+//            if (mEatRunOnAnimationRequest) {
+//                mReSchedulePostAnimationCallback = true;
+//            } else {
                 removeCallbacks(this);
                 ViewCompat.postOnAnimation(CustomScrollView.this, this);
-            }
+//            }
         }
 
     }
+    //控制上下左右边界
     private void contrainScrollBy(int dx,int dy){
         Rect viewPort = new Rect();
         getGlobalVisibleRect(viewPort);

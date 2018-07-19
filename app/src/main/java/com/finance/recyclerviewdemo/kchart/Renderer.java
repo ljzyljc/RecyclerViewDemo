@@ -197,7 +197,7 @@ public class Renderer {
         revertMapPoints(pixels);
         visibleXMin = (pixels[0] <= 0) ? 0 : (int) (pixels[0]);
         visibleXMax = visibleXMin + visibleCount + 1;// plus visibleCount+1 for smooth disappear both side.
-        Log.i(TAG, "calc: ========"+ Arrays.toString(pixels));
+        Log.i(TAG, "calc: ========" + Arrays.toString(pixels));
         if (visibleXMax > data.entries.size()) {
             visibleXMax = data.entries.size();
         }
@@ -319,53 +319,52 @@ public class Renderer {
     protected void revertMapPoints(float[] pixels) {
         Matrix tmp = new Matrix();
 
-        // invert all matrices to convert back to the original value 反转所有矩阵以获取pixels初始值
+        // invert all matrices to convert back to the original value 反转所有矩阵以获取初始值
         mMatrixOffset.invert(tmp);//相当于求逆矩阵，tem就是逆矩阵
-        Log.i(TAG, "revertMapPoints:-----mMatrixOffset------ "+mMatrixOffset.toString());
-        Log.i(TAG, "revertMapPoints: ----tmp-------"+tmp.toString());
+        Log.i(TAG, "revertMapPoints:-----mMatrixOffset------ " + mMatrixOffset.toString());
+        Log.i(TAG, "revertMapPoints: ----tmp-------" + tmp.toString());
         tmp.mapPoints(pixels);
-        Log.i(TAG, "revertMapPoints: ---1---"+ Arrays.toString(pixels));
+        Log.i(TAG, "revertMapPoints: ---1---" + Arrays.toString(pixels));
         mMatrixTouch.invert(tmp);
         tmp.mapPoints(pixels);
-        Log.i(TAG, "revertMapPoints: ---2---"+ Arrays.toString(pixels));
+        Log.i(TAG, "revertMapPoints: ---2---" + Arrays.toString(pixels));
         mMatrixValue.invert(tmp);
         tmp.mapPoints(pixels);
-        Log.i(TAG, "revertMapPoints: ---3---"+ Arrays.toString(pixels));
+        Log.i(TAG, "revertMapPoints: ---3---" + Arrays.toString(pixels));
     }
 
     //--------------------------------------------------------------------------------
 
     /**
-     *
-     * @param deltaY    (最大值-最小值)
-     * @param yMin      最小值
+     * @param deltaY (最大值-最小值)
+     * @param yMin   最小值
      */
     public void prepareMatrixValue(float deltaY, float yMin) {
         // increase the y range for good looking.
         deltaY = deltaY * 12 / 10;
         yMin = yMin * 9 / 10;
-        Log.i(TAG, "prepareMatrixValue: ---最小值--"+yMin+"-------candleRect.width()"+candleRect.width());
+        Log.i(TAG, "prepareMatrixValue: ---最小值--" + yMin + "-------candleRect.width()" + candleRect.width());
 
         float scaleX = candleRect.width() / data.entries.size();  //x轴的拉伸量   2.4
         float scaleY = candleRect.height() / deltaY;            //2.8
-        Log.i(TAG, "prepareMatrixValue: ----scaleX----"+scaleX+"---scaleY---"+scaleY);
+        Log.i(TAG, "prepareMatrixValue: ----scaleX----" + scaleX + "---scaleY---" + scaleY);
 
         mMatrixValue.reset();
         mMatrixValue.postTranslate(0, -yMin);//-77
         // the negative scale factor is used to draw x axis from right to left,y from down to up
         mMatrixValue.postScale(-scaleX, -scaleY);
-        Log.i(TAG, "prepareMatrixValue: ----candleRect.width()---"+candleRect.width());
+        Log.i(TAG, "prepareMatrixValue: ----candleRect.width()---" + candleRect.width());
         mMatrixValue.postTranslate(candleRect.width(), candleRect.height());
     }
 
     public void prepareMatrixTouch(float visibleCount) {    //100
         float scaleX = data.entries.size() / visibleCount;     //一共576条数据，所以这是的scaleX = 5.67
-        Log.i(TAG, "prepareMatrixTouch: ---------"+scaleX);
+        Log.i(TAG, "prepareMatrixTouch: ---------" + scaleX);
         float scaleY = 1;
         //重置矩阵为单位矩阵
         mMatrixTouch.reset();
         mMatrixTouch.postScale(scaleX, scaleY);
-        Log.i(TAG, "prepareMatrixTouch: --------"+mMatrixTouch.toString());
+        Log.i(TAG, "prepareMatrixTouch: --------" + mMatrixTouch.toString());
         //重置可滚动的范围
         resetScrollRange(scaleX);
 
@@ -376,9 +375,9 @@ public class Renderer {
     //x轴和Y轴的偏移量   60   30
     public void prepareMatrixOffset(float offsetX, float offsetY) {
         mMatrixOffset.reset();
-        Log.i(TAG, "prepareMatrixOffset: ------"+mMatrixOffset.toString()+"-------------"+offsetX+"---"+offsetY);
+        Log.i(TAG, "prepareMatrixOffset: ------" + mMatrixOffset.toString() + "-------------" + offsetX + "---" + offsetY);
         mMatrixOffset.postTranslate(offsetX, offsetY);
-        Log.i(TAG, "prepareMatrixOffset: ---平移后的矩阵位置---"+mMatrixOffset.toString());
+        Log.i(TAG, "prepareMatrixOffset: ---平移后的矩阵位置---" + mMatrixOffset.toString());
     }
 
     public void prepareMatrixBar(float maxY) {
@@ -393,7 +392,7 @@ public class Renderer {
         minTouchOffset = 0;
         //最大的可平移距离，因为已经有了一屏显示了，所以要减 1，可移动的距离
         maxTouchOffset = candleRect.width() * (scaleX - 1f);
-        Log.i(TAG, "resetScrollRange: -----6453.94-----"+maxTouchOffset);
+        Log.i(TAG, "resetScrollRange: -----6453.94-----" + maxTouchOffset);
     }
 
     /**
@@ -425,62 +424,62 @@ public class Renderer {
     protected float[] matrixValues = new float[9];
     private boolean isOnBorder = true;
 
-//    public void refreshTouchMatrix(float dx, float dy) {
-//        isOnBorder = true;
-//
-//        mMatrixTouch.getValues(matrixValues);
-//
-//        matrixValues[Matrix.MTRANS_X] += -dx;
-//        matrixValues[Matrix.MTRANS_Y] += dy;
-//
-//        if (matrixValues[Matrix.MTRANS_X] < -maxTouchOffset) {
-//            matrixValues[Matrix.MTRANS_X] = -maxTouchOffset;
-//            isOnBorder = false;
-//        }
-//        if (matrixValues[Matrix.MTRANS_X] > 0) {
-//            matrixValues[Matrix.MTRANS_X] = 0;
-//            isOnBorder = false;
-//        }
-//
-//        mMatrixTouch.setValues(matrixValues);
-//    }
-//
-//    public boolean canScroll() {
-//        return isOnBorder;
-//    }
-//
-//    /**
-//     * TODO Zoom in.
-//     *
-//     * @param x pivot x
-//     * @param y pivot y
-//     */
-//    public void zoomIn(float x, float y) {
-//        mMatrixTouch.postScale(1.4f, 1.0f, x, y);
-//        mMatrixTouch.getValues(matrixValues);
-//        if (matrixValues[Matrix.MSCALE_X] < 1) {
-//            matrixValues[Matrix.MSCALE_X] = 1;
-//        }
-//        mMatrixTouch.setValues(matrixValues);
-//        resetScrollRange(matrixValues[Matrix.MSCALE_X]);
-//    }
-//
-//    /**
-//     * TODO Zoom out.
-//     *
-//     * @param x pivot x
-//     * @param y pivot y
-//     */
-//    public void zoomOut(float x, float y) {
-//        mMatrixTouch.postScale(0.7f, 1.0f, x, y);
-//        mMatrixTouch.getValues(matrixValues);
-//        if (matrixValues[Matrix.MSCALE_X] < 1) {
-//            matrixValues[Matrix.MSCALE_X] = 1;
-//        }
-//        mMatrixTouch.setValues(matrixValues);
-//        resetScrollRange(matrixValues[Matrix.MSCALE_X]);
-//
-//        prepareMatrixValue(data.mYMax - data.mYMin, data.mYMin);
-//        prepareMatrixOffset(candleRect.left, candleRect.top);
-//    }
+    public void refreshTouchMatrix(float dx, float dy) {
+        isOnBorder = true;
+
+        mMatrixTouch.getValues(matrixValues);
+
+        matrixValues[Matrix.MTRANS_X] += -dx;
+        matrixValues[Matrix.MTRANS_Y] += dy;
+
+        if (matrixValues[Matrix.MTRANS_X] < -maxTouchOffset) {
+            matrixValues[Matrix.MTRANS_X] = -maxTouchOffset;
+            isOnBorder = false;
+        }
+        if (matrixValues[Matrix.MTRANS_X] > 0) {
+            matrixValues[Matrix.MTRANS_X] = 0;
+            isOnBorder = false;
+        }
+
+        mMatrixTouch.setValues(matrixValues);
+    }
+
+    public boolean canScroll() {
+        return isOnBorder;
+    }
+
+    /**
+     * TODO Zoom in.
+     *
+     * @param x pivot x
+     * @param y pivot y
+     */
+    public void zoomIn(float x, float y) {
+        mMatrixTouch.postScale(1.4f, 1.0f, x, y);
+        mMatrixTouch.getValues(matrixValues);
+        if (matrixValues[Matrix.MSCALE_X] < 1) {
+            matrixValues[Matrix.MSCALE_X] = 1;
+        }
+        mMatrixTouch.setValues(matrixValues);
+        resetScrollRange(matrixValues[Matrix.MSCALE_X]);
+    }
+
+    /**
+     * TODO Zoom out.
+     *
+     * @param x pivot x
+     * @param y pivot y
+     */
+    public void zoomOut(float x, float y) {
+        mMatrixTouch.postScale(0.7f, 1.0f, x, y);
+        mMatrixTouch.getValues(matrixValues);
+        if (matrixValues[Matrix.MSCALE_X] < 1) {
+            matrixValues[Matrix.MSCALE_X] = 1;
+        }
+        mMatrixTouch.setValues(matrixValues);
+        resetScrollRange(matrixValues[Matrix.MSCALE_X]);
+
+        prepareMatrixValue(data.mYMax - data.mYMin, data.mYMin);
+        prepareMatrixOffset(candleRect.left, candleRect.top);
+    }
 }
