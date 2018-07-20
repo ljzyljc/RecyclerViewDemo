@@ -16,7 +16,7 @@
     <script type="text/javascript" language="javascript">
 
 	function showHtmlcallJava(){
-	var str = window.android.clickOnAndroid();
+	var str = window.andrroid.clickOnAndroid();
 		alert(str);
 	}
 
@@ -32,6 +32,16 @@
 	function showFromHtml2( param ){
 		document.getElementById("id_input2").value = "Java call Html : " + param;
 	}
+	function callJS(){
+		alert("Android call");
+	}
+	function callAndroidOne(){
+		document.location = "js://webview?arg1=111&arg2=222";
+	}
+	function callAndroidThree(){
+		var result=prompt("js://webview?arg1=111&arg2=222");
+		alert("demo " + result);
+	}
 </script>
 
 
@@ -46,11 +56,16 @@ hello IT-homer
 <br>
 <br>
 
-<input type="button" value="HtmlcallJava" onclick="showHtmlcallJava()" />
-
+<input type="button" value="HtmlcallJava" onclick="callJS()" />
 <br>
-
-<input type="button" value="HtmlcallJava2" onclick="showHtmlcallJava2()" />
+<br>
+<input type="button" value="点击调用安卓（2）" onclick="callAndroidOne()" />
+<br>
+<br>
+<input type="button" value="点击调用安卓（3）" onclick="callAndroidThree()" />
+<br>
+<br>
+<input type="button" value="HtmlcallAndroid" onclick="showHtmlcallJava2()" />
 
 <br>
 <br>
@@ -60,7 +75,7 @@ hello IT-homer
 
 <input id="id_input" style="width: 90%" type="text" value="null" />
 <br>
-<input type="button" value="JavacallHtml" onclick="window.andrroid.clickOnAndroid()" />
+<input type="button" value="调用安卓的方法" onclick="window.andrroid.clickOnAndroid()" />
 
 <br>
 <br>
