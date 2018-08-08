@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -104,6 +106,10 @@ public class RxJavaTestActivity extends AppCompatActivity {
             @Override
             public void onComplete() {
                 Log.i(TAG, "onComplete: ");
+//                HashMap hashMap = new HashMap();
+//                hashMap.put();
+//                SparseArray array = new SparseArray();
+//                array.put();
             }
         };
         //建立连接
