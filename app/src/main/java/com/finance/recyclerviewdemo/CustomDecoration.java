@@ -1,5 +1,7 @@
 package com.finance.recyclerviewdemo;
 
+import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;

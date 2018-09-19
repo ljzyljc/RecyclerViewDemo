@@ -4,19 +4,26 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<ImageView
-    android:layout_width="wrap_content"
-    android:id="@+id/img"
-    android:layout_height="wrap_content" />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:id="@+id/img2"
-        android:layout_height="wrap_content" />
-    <com.finance.recyclerviewdemo.kchart.KLineChart
-        android:id="@+id/chart"
+<!--<ImageView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:id="@+id/img"-->
+    <!--android:layout_height="wrap_content" />-->
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:id="@+id/img2"-->
+        <!--android:layout_height="wrap_content" />-->
+    <!--<com.finance.recyclerviewdemo.kchart.KLineChart-->
+        <!--android:id="@+id/chart"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--&gt;</com.finance.recyclerviewdemo.kchart.KLineChart>-->
+    <com.finance.recyclerviewdemo.kchart.LineChart
+        android:id="@+id/lineChart"
         android:layout_width="match_parent"
+        android:background="#ff0"
         android:layout_height="200dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        ></com.finance.recyclerviewdemo.kchart.KLineChart>
+
+        />
 </RelativeLayout>

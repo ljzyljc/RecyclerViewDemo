@@ -13,6 +13,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.finance.recyclerviewdemo.R;
+import com.finance.recyclerviewdemo.kchart.bean.NewEntry;
+import com.finance.recyclerviewdemo.kchart.bean.NewEntryData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +32,8 @@ public class TestChartActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
-        imageView1 = findViewById(R.id.img);
-        imageView2 = findViewById(R.id.img2);
+//        imageView1 = findViewById(R.id.img);
+//        imageView2 = findViewById(R.id.img2);
 
 //        float[] mArr = new float[]{0,0};
 //        Matrix mMatrixValue = new Matrix();
@@ -57,34 +59,51 @@ public class TestChartActivity extends AppCompatActivity {
 //        mMatrixValue.postTranslate(300,300);
 //        mMatrixValue.mapPoints(mArr1);
 //        Log.i(TAG, "onCreate: ---4---"+Arrays.toString(mArr1));  //输出（300，440）
-
-
-
-
-        final EntryData data = new EntryData();
-        for (int i = 0; i < 567; i++) {
+        final NewEntryData data = new NewEntryData();
+        for (int i = 0; i < 12; i++) {
             float mult = 100;
             float val = (float) (Math.random() * 40) + mult;
 
-            float high = (float) (Math.random() * 9) + 8f;
-            float low = (float) (Math.random() * 9) + 8f;
+            float high = (i+1) * 12;
+            float low = 0;
 
-            float open = (float) (Math.random() * 6) + 1f;
+            float open = (i+1) * 10;
             float close = (float) (Math.random() * 6) + 1f;
 
             boolean even = i % 2 == 0;
 
-            data.addEntry(new Entry(
-                    val + high,
-                    val - low,
-                    even ? val + open : val - open,
-                    even ? val - close : val + close,
-                    (int) (Math.random() * 111),
-                    ""));
+            data.addEntry(new NewEntry(i+1,(i+1)*10));
         }
 
-        final KLineChart chart = (KLineChart) findViewById(R.id.chart);
-        chart.setData(data);
+        final LineChart chart = (LineChart) findViewById(R.id.lineChart);
+        chart.setmData(data);
+
+
+        //FIXME:--------------------K线图------------------------------------------
+//        final EntryData data = new EntryData();
+//        for (int i = 0; i < 567; i++) {
+//            float mult = 100;
+//            float val = (float) (Math.random() * 40) + mult;
+//
+//            float high = (float) (Math.random() * 9) + 8f;
+//            float low = (float) (Math.random() * 9) + 8f;
+//
+//            float open = (float) (Math.random() * 6) + 1f;
+//            float close = (float) (Math.random() * 6) + 1f;
+//
+//            boolean even = i % 2 == 0;
+//
+//            data.addEntry(new Entry(
+//                    val + high,
+//                    val - low,
+//                    even ? val + open : val - open,
+//                    even ? val - close : val + close,
+//                    (int) (Math.random() * 111),
+//                    ""));
+//        }
+//
+//        final KLineChart chart = (KLineChart) findViewById(R.id.chart);
+//        chart.setData(data);
 //        initViews();
 
 //        Matrix matrix = new Matrix();

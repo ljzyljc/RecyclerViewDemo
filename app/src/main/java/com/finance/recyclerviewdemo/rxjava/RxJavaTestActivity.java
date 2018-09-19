@@ -1,5 +1,6 @@
 package com.finance.recyclerviewdemo.rxjava;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import org.reactivestreams.Subscription;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.BackpressureStrategy;
@@ -51,13 +54,33 @@ public class RxJavaTestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rxjava);
         button = findViewById(R.id.btn);
+        final ExecutorService executorService = Executors.newCachedThreadPool();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                request();
+//                testAsyn(1);
+//                testAsyn(2);
+//                testAsyn(3);
+//                testAsyn(4);
+//                testAsyn(5);
+//                request();
+//                for (int i=0;i<5;i++){
+//                    final int finalI = i;
+//                    executorService.submit(new Runnable() {
+//                        @Override
+//                        public void run() {
+////                            test1(finalI);
+//                            testAsyn(finalI);
+//                        }
+//                    });
+//                }
             }
         });
-//        test1();
+//        test1(1);
+//        test1(2);
+//        test1(3);
+//        test1(4);
+//        test1(5);
 //        test2();
 //        test3();
 //        test4();
@@ -69,10 +92,23 @@ public class RxJavaTestActivity extends AppCompatActivity {
 //        test10();
 //        test11();
 //        test12();
-        test13();
+//        test13();
+
+
     }
 
-    public void test1(){
+    public void testAsyn(final int index){
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                Log.i(TAG, "doInBackground: -----"+index);
+                return null;
+            }
+        }.execute();
+    }
+
+    public void test1(final int count){
+        Log.i(TAG, "test1: -------"+count+Thread.currentThread().getName());
         //创建一个上游的Observable
         Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
@@ -105,7 +141,7 @@ public class RxJavaTestActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                Log.i(TAG, "onComplete: ");
+                Log.i(TAG, "onComplete: -------------"+count);
 //                HashMap hashMap = new HashMap();
 //                hashMap.put();
 //                SparseArray array = new SparseArray();
@@ -160,8 +196,10 @@ public class RxJavaTestActivity extends AppCompatActivity {
             }
         };
         //TODO:subscribeOn() 指定的是上游发送事件的线程, observeOn() 指定的是下游接收事件的线程.
-        observable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+//        observable.subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(consumer);
+        observable.compose(RxTransformers.<Integer>io_main())
                 .subscribe(consumer);
 //        多次指定上游的线程只有第一次指定的有效, 也就是说多次调用subscribeOn() 只有第一次的有效, 其余的会被忽略.
 //
@@ -180,28 +218,35 @@ public class RxJavaTestActivity extends AppCompatActivity {
 
         Retrofit retrofit = RetrofitUtils.create();
         Api api = retrofit.create(Api.class);
-        api.login(new User())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<User>() {
+        api.loginLLL()
+                .compose(RxTransformers.<UserData>io_main_flo())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<User>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//                        compositeDisposable.add(d);
+//                    }
+//
+//                    @Override
+//                    public void onNext(User value) {
+//                        Log.i(TAG, "onNext: ------"+value.toString());
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.i(TAG, "onError: ----"+e.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Log.i(TAG, "onComplete: --");
+//                    }
+//                });
+                .subscribe(new BaseSbuscriber<UserData>(this){
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(User value) {
-                        Log.i(TAG, "onNext: ------"+value.toString());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.i(TAG, "onError: ----"+e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.i(TAG, "onComplete: --");
+                    public void onNext(UserData userData) {
+                        
                     }
                 });
 
