@@ -11,6 +11,7 @@ import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -58,6 +59,19 @@ public class LineChart extends View {
      * @see #getScrollState()
      */
     public static final int SCROLL_STATE_SETTLING = 2;
+
+    GestureDetector detector = new GestureDetector(getContext(),new GestureDetector.SimpleOnGestureListener(){
+        @Override
+        public void onLongPress(MotionEvent e) {
+            super.onLongPress(e);
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+//            lineRender.zoomOut(e.getX(),e.getY());
+            return super.onDoubleTap(e);
+        }
+    });
     public LineChart(Context context) {
         this(context,null);
     }
@@ -77,6 +91,7 @@ public class LineChart extends View {
         contentRect = new RectF();
         lineRender = new LineRender();
         contentLeftOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, context.getResources().getDisplayMetrics());
+        detector.setIsLongpressEnabled(true);
 
     }
 
@@ -193,6 +208,14 @@ public class LineChart extends View {
         vtev.recycle();
 
         return true;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+
+
+        return super.dispatchTouchEvent(event);
     }
 
     public void setmData(NewEntryData mData) {

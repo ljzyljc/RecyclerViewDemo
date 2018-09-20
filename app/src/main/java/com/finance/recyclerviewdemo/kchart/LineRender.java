@@ -277,6 +277,33 @@ public class LineRender {
 
 
     }
+    public void zoomIn(float x, float y) {
+        mMatrixTouch.postScale(1.4f, 1.0f, x, y);
+        mMatrixTouch.getValues(matrixValues);
+        if (matrixValues[Matrix.MSCALE_X] < 1) {
+            matrixValues[Matrix.MSCALE_X] = 1;
+        }
+        mMatrixTouch.setValues(matrixValues);
+        resetScrollRange(matrixValues[Matrix.MSCALE_X]);
+    }
 
+    /**
+     * TODO Zoom out.
+     *
+     * @param x pivot x
+     * @param y pivot y
+     */
+    public void zoomOut(float x, float y) {
+        mMatrixTouch.postScale(0.7f, 1.0f, x, y);
+        mMatrixTouch.getValues(matrixValues);
+        if (matrixValues[Matrix.MSCALE_X] < 1) {
+            matrixValues[Matrix.MSCALE_X] = 1;
+        }
+        mMatrixTouch.setValues(matrixValues);
+        resetScrollRange(matrixValues[Matrix.MSCALE_X]);
+
+        prepareMatrixValue(data.mYMax - data.mYMin, data.mYMin);
+        prepareMatrixOffset(contentRectF.left, contentRectF.top);
+    }
 
 }
